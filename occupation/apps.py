@@ -24,16 +24,19 @@ class OccupationConfig(AppConfig):
 @register('settings')
 def check_middleware_installed_correctly(app_configs=None, **kwargs):
     # Installed after SessionMiddleware.
+    Error
     return []
 
 
 @register('settings')
 def check_context_manager_installed(app_configs=None, **kwargs):
     # Warning if not.
+    Warning
     return []
 
 
 @register('settings')
 def check_installed_before_admin(app_configs=None, **kwargs):
     # Warning if not, as we can't override templates.
+    Warning
     return []
