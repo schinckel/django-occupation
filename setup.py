@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="occupation",
+    name="django-occupation",
     version='0.0.1',
     description="Multitenancy support in django, via Row Level Security.",
     url="https://bitbucket.org/schinckel/django-occupation",

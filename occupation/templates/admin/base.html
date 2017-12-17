@@ -1,0 +1,6 @@
+{% extends 'admin/base.html' %}
+
+{% block userlinks %}
+  {% include 'admin/change-tenant.html' %} /
+  {{ block.super }}
+{% endblock %}

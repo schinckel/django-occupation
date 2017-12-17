@@ -1,0 +1,17 @@
+[
+  {
+    "pk": null,
+    "model": "tests.AwareModel",
+    "fields": {
+      "name": "aware1"
+    }
+  },
+  {
+    "pk": null,
+    "model": "tests.AwareModel",
+    "fields": {
+      "name": "🌊🌊🌊🌊🌊"
+    }
+  }
+
+]

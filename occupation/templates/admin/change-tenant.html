@@ -1,0 +1,19 @@
+<form style="display: inline-block">
+  <label>
+    Viewing:
+    <select name="__tenant"
+            onchange="window.location.search = '?__tenant=' + this.value;"
+            style="background: none;
+                   -webkit-appearance: menulist-button;
+                   color: #ffc;
+                   border-color: rgba(255, 255, 204, 0.22)"
+    >
+      <option value="">No tenant. Please select...</option>
+      {% for tenant in tenant_choices %}
+        <option value="{{ tenant.0 }}"
+                {% if tenant.0 == active_tenant %}selected="selected"{% endif %}
+        >{{ tenant.1}}</option>
+      {% endfor %}
+    </select>
+  </label>
+</form>

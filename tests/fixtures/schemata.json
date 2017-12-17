@@ -1,0 +1,16 @@
+[
+  {
+    "pk": "a",
+    "model": "boardinghouse.schema",
+    "fields": {
+      "name": "a"
+    }
+  },
+  {
+    "pk": "b",
+    "model": "boardinghouse.schema",
+    "fields": {
+      "name": "b"
+    }
+  }
+]
