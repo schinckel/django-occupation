@@ -6,7 +6,15 @@ pipelines:
         - tox
       services:
         - database
+      environment:
+        - DB_NAME: occupation
+        - DB_USER: test_user
+        - DB_PASS: test_user_password
 definitions:
   services:
     database:
       image: postgres
+      environment:
+        - POSTGRES_DB: 'occupation'
+        - POSTGRES_USER: 'test_user'
+        - POSTGRES_PASSWORD: 'test_user_password'
