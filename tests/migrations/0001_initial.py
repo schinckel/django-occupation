@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import boardinghouse.base
 
 
 class Migration(migrations.Migration):
@@ -42,7 +41,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(unique=True, max_length=10)),
                 ('status', models.BooleanField(default=False)),
             ],
-            bases=(boardinghouse.base.SharedSchemaMixin, models.Model),
+            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='SelfReferentialModel',

@@ -1,0 +1,12 @@
+image: python:3.6.3
+pipelines:
+  default:
+    -step:
+      script:
+        - tox
+      services:
+        - database
+definitions:
+  services:
+    database:
+      image: postgres

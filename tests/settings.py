@@ -1,5 +1,4 @@
 import os
-import django
 
 USE_TZ = True
 
@@ -7,19 +6,19 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'boardinghouse',
-    'boardinghouse.contrib.template',
-    'boardinghouse.contrib.demo',
+    'occupation',
+    # 'boardinghouse.contrib.template',
+    # 'boardinghouse.contrib.demo',
     'django.contrib.admin',
-    # 'boardinghouse.contrib.invite',
     'tests',
 ]
 
 DATABASES = {
     "default": {
-        'ENGINE': 'boardinghouse.backends.postgres',
-        'NAME': 'boardinghouse-{DB_NAME}'.format(**os.environ),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME', 'occupation'),
         'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASS'),
         'PORT': os.environ.get('DB_PORT', 5432),
     }
 }
@@ -33,32 +32,18 @@ MIDDLEWARE = (
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'boardinghouse.middleware.SchemaMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'occupation.middleware.SelectTenant',
+    'occupation.middleware.ActivateTenant',
+
 )
-if django.VERSION < (1, 10):
-    MIDDLEWARE_CLASSES = MIDDLEWARE
-    del MIDDLEWARE
 
 PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.MD5PasswordHasher',
 )
 AUTH_USER_MODEL = 'auth.User'
-SECRET_KEY = 'django-boardinghouse-sekret-keye'
-TEST_RUNNER = 'rainbowtests.test.runner.RainbowDiscoverRunner'
+SECRET_KEY = 'django-occupataion-sekret-keye'
 
-# These locations are different for 1.7 and 1.8+ (-> TEMPLATES)
-if django.VERSION < (1, 9):
-    TEMPLATE_CONTEXT_PROCESSORS = [
-        'django.contrib.auth.context_processors.auth',
-        'django.core.context_processors.debug',
-        'django.core.context_processors.i18n',
-        'django.core.context_processors.media',
-        'django.core.context_processors.static',
-        'django.core.context_processors.tz',
-        'django.contrib.messages.context_processors.messages',
-        'boardinghouse.context_processors.schemata',
-    ]
 
 TEMPLATES = [
     {
@@ -74,11 +59,11 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
-                'boardinghouse.context_processors.schemata',
+                'occupation.context_processors.tenants',
             ]
         }
     },
 ]
 
-SHARED_MODELS = ['tests.SettingsSharedModel']
-PRIVATE_MODELS = ['tests.SettingsPrivateModel']
+# SHARED_MODELS = ['tests.SettingsSharedModel']
+# PRIVATE_MODELS = ['tests.SettingsPrivateModel']

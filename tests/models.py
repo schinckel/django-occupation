@@ -1,18 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User  # NOQA
 
-from boardinghouse.base import SharedSchemaModel, MultiSchemaManager
-
 
 class AwareModel(models.Model):
     name = models.CharField(max_length=10, unique=True)
     status = models.BooleanField(default=False)
     factor = models.PositiveSmallIntegerField(default=7)
 
-    objects = MultiSchemaManager()
 
-
-class NaiveModel(SharedSchemaModel):
+class NaiveModel(models.Model):
     name = models.CharField(max_length=10, unique=True)
     status = models.BooleanField(default=False)
 
