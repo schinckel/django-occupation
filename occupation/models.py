@@ -25,7 +25,3 @@ class Tenant(AbstractTenant):
 
     class Meta:
         swappable = 'OCCUPATION_TENANT_MODEL'
-
-
-class RLSTable(models.Model):
-    pass

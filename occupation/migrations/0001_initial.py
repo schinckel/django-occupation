@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('tenant_id', models.AutoField(primary_key=True, serialize=False)),
                 ('name', models.CharField(max_length=256, unique=True)),
                 ('is_active', models.BooleanField(default=True)),
-                ('users', models.ManyToManyField(blank=True, help_text='Users that may access data from this tenant.', related_name='visible_tenants', to=settings.AUTH_USER_MODEL)),
+                # ('users', models.ManyToManyField(blank=True, help_text='Users that may access data from this tenant.', related_name='visible_tenants', to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'swappable': 'OCCUPATION_TENANT_MODEL',
