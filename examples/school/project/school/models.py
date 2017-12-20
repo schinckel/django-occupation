@@ -38,7 +38,7 @@ class Student(models.Model):
 class Subject(models.Model):
     name = models.CharField(unique=True, max_length=64)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 SEMESTERS = (
@@ -88,3 +88,10 @@ class Enrolment(models.Model):
 class Result(models.Model):
     enrolment = models.ForeignKey(Enrolment, related_name='results', on_delete=models.CASCADE)
     grade = models.CharField(choices=GRADES, max_length=3, null=True, blank=True)
+
+    def __str__(self):
+        return '{student} received a {grade} for {subject}'.format(
+            student=self.enrolment.student.name,
+            grade=self.grade,
+            subject=self.enrolment.subject.name,
+        )

@@ -20,7 +20,7 @@ def get_tenant_fk(model):
 
 ENABLE_RLS = 'ALTER TABLE {table_name} ENABLE ROW LEVEL SECURITY'
 FORCE_RLS = 'ALTER TABLE {table_name} FORCE ROW LEVEL SECURITY'
-CREATE_POLICY = 'CREATE POLICY access_tenant_data ON {table_name} USING ({policy}) CHECK ({policy})'
+CREATE_POLICY = 'CREATE POLICY access_tenant_data ON {table_name} USING ({policy}) WITH CHECK ({policy})'
 
 CREATE_SUPERUSER_POLICY = '''
 CREATE POLICY superuser_access_tenant_data ON {table_name} USING (is_superuser(current_setting('occupation.user_id')))
