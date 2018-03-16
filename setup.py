@@ -11,7 +11,7 @@ setup(
     include_package_data=True,
     install_requires=[
         'django',
-        'psycopg2',  # or psycopg2cffi under pypy
+        'psycopg2-binary',  # or psycopg2cffi under pypy
     ],
     classifiers=[
         'Development Status :: 1 - Alpha',

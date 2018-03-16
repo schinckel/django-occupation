@@ -1,0 +1,20 @@
+[
+{
+  "pk": null,
+  "model": "school.staffmember",
+  "fields": {
+    "staff_id": "55345213",
+    "name": "Sue Pannell",
+    "school_id": 2
+  }
+},
+{
+  "pk": null,
+  "model": "school.student",
+  "fields": {
+    "student_id": "1136524632",
+    "name": "Matthew Schinckel",
+    "school_id": 2
+  }
+}
+]

@@ -4,6 +4,8 @@ from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
 
+from occupation.operations import EnableRowLevelSecurity
+
 
 class Migration(migrations.Migration):
 
@@ -46,6 +48,7 @@ class Migration(migrations.Migration):
                 ('school', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='staff_members', to=settings.OCCUPATION_TENANT_MODEL)),
             ],
         ),
+        EnableRowLevelSecurity('StaffMember'),
         migrations.CreateModel(
             name='Student',
             fields=[
@@ -55,6 +58,7 @@ class Migration(migrations.Migration):
                 ('school', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='students', to=settings.OCCUPATION_TENANT_MODEL)),
             ],
         ),
+        EnableRowLevelSecurity('Student'),
         migrations.CreateModel(
             name='Subject',
             fields=[

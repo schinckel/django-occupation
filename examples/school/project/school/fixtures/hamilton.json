@@ -1,0 +1,90 @@
+[
+{
+  "pk": 1,
+  "model": "school.staffmember",
+  "fields": {
+    "staff_id": "RAW",
+    "name": "Rex Allen Waters",
+    "school_id": 1
+  }
+},
+{
+  "pk": 2,
+  "model": "school.staffmember",
+  "fields": {
+    "staff_id": "LC",
+    "name": "Liz Cummins",
+    "school_id": 1
+  }
+},
+{
+  "pk": 1,
+  "model": "school.student",
+  "fields": {
+    "student_id": "12345678",
+    "name": "Matthew Schinckel",
+    "school_id": 1
+  }
+},
+{
+  "pk": 2,
+  "model": "school.student",
+  "fields": {
+    "student_id": "56562465",
+    "name": "Nigel Baker",
+    "school_id": 1
+  }
+},
+{
+  "pk": 1,
+  "model": "school.subject",
+  "fields": {
+    "name": "Maths"
+  }
+},
+{
+  "pk": 2,
+  "model": "school.subject",
+  "fields": {
+    "name": "English"
+  }
+},
+{
+  "pk": 3,
+  "model": "school.subject",
+  "fields": {
+    "name": "Physics"
+  }
+},
+{
+  "pk": 4,
+  "model": "school.subject",
+  "fields": {
+    "name": "Chemistry"
+  }
+},
+{
+  "pk": 3,
+  "model": "school.enrolment",
+  "fields": {
+    "grade": null,
+    "enrolment_date": "2014-01-26",
+    "semester": 0,
+    "student": 1,
+    "year": 2014,
+    "subject": 1
+  }
+},
+{
+  "pk": 4,
+  "model": "school.enrolment",
+  "fields": {
+    "grade": "D",
+    "enrolment_date": "2014-01-01",
+    "semester": 1,
+    "student": 1,
+    "year": 2013,
+    "subject": 2
+  }
+}
+]

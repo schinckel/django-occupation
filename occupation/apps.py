@@ -19,6 +19,8 @@ class OccupationConfig(AppConfig):
                     setattr(settings, key, value)
 
         # from . import receivers  # NOQA
+        from django.db.backends.signals import connection_created
+        connection_created.connect(set_dummy_active_tenant)
 
 
 @register('settings')
@@ -40,3 +42,7 @@ def check_installed_before_admin(app_configs=None, **kwargs):
     # Warning if not, as we can't override templates.
     Warning
     return []
+
+
+def set_dummy_active_tenant(sender, connection, **kwargs):
+    connection.cursor().execute("SET occupation.active_tenant = ''")

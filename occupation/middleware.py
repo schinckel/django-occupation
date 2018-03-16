@@ -5,6 +5,7 @@ from django.utils.translation import ugettext as _
 
 from .exceptions import Forbidden
 from .signals import session_tenant_changed
+from .utils import activate_tenant
 
 TENANT_CHANGED = _('Tenant changed to %(active_tenant)s')
 TENANT_CLEARED = _('Tenant deselected')
@@ -91,7 +92,7 @@ def ActivateTenant(get_response):
     def middleware(request):
         if request.user.pk:
             connection.cursor().execute('SET occupation.user_id = %s', [request.user.pk])
-        connection.cursor().execute('SET occupation.active_tenant = %s', [request.session.get('active_tenant', '')])
+        activate_tenant(request.session.get('active_tenant', ''))
         return get_response(request)
 
     return middleware
