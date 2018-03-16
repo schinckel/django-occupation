@@ -76,4 +76,6 @@ class Migration(migrations.Migration):
             name='subject',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='enrolments', to='school.Subject'),
         ),
+
+        EnableRowLevelSecurity('Enrolment'),
     ]

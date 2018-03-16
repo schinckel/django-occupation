@@ -3,14 +3,16 @@
   "pk": 1,
   "model": "school.school",
   "fields": {
-    "name": "Hamilton College"
+    "name": "Hamilton College",
+    "users": [1]
   }
 },
 {
   "pk": 2,
   "model": "school.school",
   "fields": {
-    "name": "Naracoorte High School"
+    "name": "Naracoorte High School",
+    "users": [1]
   }
 }
 ]

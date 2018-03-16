@@ -76,13 +76,14 @@ def get_fk_chains(model, root, parents=()):
 def get_policy_clauses(model, tenant_model):
     fields = set(field[0] for field in get_fk_chains(model, tenant_model))
     DIRECT_LINK = "{fk}::TEXT = current_setting('occupation.active_tenant')"
-    INDIRECT_LINK = "{fk} IN (SELECT {pk} FROM {table_name})"
+    INDIRECT_LINK = "EXISTS (SELECT 1 FROM {related_table} WHERE {table_name}.{fk} = {related_table}.{pk})"
 
     return [
         (DIRECT_LINK if field.related_model is tenant_model else INDIRECT_LINK).format(
             fk=db_column(field),
             pk=db_column(field.remote_field.target_field),
-            table_name=field.related_model._meta.db_table
+            related_table=field.related_model._meta.db_table,
+            table_name=model._meta.db_table,
         ) for field in fields
     ]
 
