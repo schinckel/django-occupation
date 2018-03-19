@@ -1,20 +1,17 @@
 image: python:3.6.3
 pipelines:
   default:
-    -step:
-      script:
-        - tox
-      services:
-        - database
-      environment:
-        - DB_NAME: occupation
-        - DB_USER: test_user
-        - DB_PASS: test_user_password
+    - step:
+        script:
+          - pip install tox
+          - tox
+        services:
+          - database
 definitions:
   services:
     database:
       image: postgres
       environment:
-        - POSTGRES_DB: 'occupation'
-        - POSTGRES_USER: 'test_user'
-        - POSTGRES_PASSWORD: 'test_user_password'
+        POSTGRES_DB: 'occupation'
+        POSTGRES_USER: 'test_user'
+        POSTGRES_PASSWORD: 'test_user_password'
