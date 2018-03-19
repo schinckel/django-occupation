@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 from django.conf.urls import include, url
 from django.contrib import admin
-from django.contrib.auth.views import login, logout_then_login
+# from django.contrib.auth.views import login, logout_then_login
 from django.db import connection
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -46,8 +46,8 @@ urlpatterns = [
     url(r'^sql/$', sql_injection),
     url(r'^change/$', change_schema_view),
     url(r'^aware/$', aware_objects_view),
-    url(r'^login/$', login, {'template_name': 'admin/login.html'}, name='login'),
-    url(r'^logout/$', logout_then_login, name='logout'),
+    # url(r'^login/$', login, {'template_name': 'admin/login.html'}, name='login'),
+    # url(r'^logout/$', logout_then_login, name='logout'),
     url(r'^bad/activate/schema/(.*)/$', activate_schema_view, name='bad-view'),
     # url(r'^demo/', include(boardinghouse.contrib.demo.urls.urlpatterns)),
 ]

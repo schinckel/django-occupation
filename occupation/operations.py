@@ -1,6 +1,6 @@
 from django.db import migrations
 
-from .utils import enable_row_level_security, disable_row_level_security
+from .utils import disable_row_level_security, enable_row_level_security
 
 
 class EnableRowLevelSecurity(migrations.operations.base.Operation):

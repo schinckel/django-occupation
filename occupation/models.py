@@ -1,6 +1,6 @@
+from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext as _
-from django.conf import settings
 
 
 class AbstractTenant(models.Model):

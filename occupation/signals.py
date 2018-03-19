@@ -1,6 +1,5 @@
 from django.dispatch import Signal
 
-
 tenant_created = Signal(providing_args=['tenant'])
 tenant_deleted = Signal(providing_args=['tenant'])
 
