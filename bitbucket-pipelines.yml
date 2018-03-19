@@ -3,8 +3,8 @@ pipelines:
   default:
     - step:
         script:
-          - pip install tox
-          - tox
+          - pip install tox detox
+          - detox
         services:
           - database
 definitions:
