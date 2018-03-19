@@ -22,6 +22,9 @@ class OccupationConfig(AppConfig):
         from django.db.backends.signals import connection_created
         connection_created.connect(set_dummy_active_tenant)
 
+        from .admin import patch_admin
+        patch_admin()
+
 
 @register('settings')
 def check_middleware_installed_correctly(app_configs=None, **kwargs):

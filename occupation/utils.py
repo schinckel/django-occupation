@@ -3,7 +3,7 @@ from django.conf import settings
 from django.db import connection, transaction
 
 
-def get_tenant_model(apps):
+def get_tenant_model(apps=apps):
     return apps.get_model(*settings.OCCUPATION_TENANT_MODEL.split('.'))
 
 

@@ -3,6 +3,8 @@
 from django.db import migrations, models
 import django.db.models.deletion
 
+from occupation.operations import EnableRowLevelSecurity
+
 
 class Migration(migrations.Migration):
 
@@ -19,4 +21,5 @@ class Migration(migrations.Migration):
                 ('enrolment', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='results', to='school.Enrolment')),
             ],
         ),
+        EnableRowLevelSecurity('Result'),
     ]

@@ -6,6 +6,7 @@ admin.site.register(Student)
 admin.site.register(StaffMember)
 admin.site.register(Subject)
 admin.site.register(School)
+admin.site.register(Result)
 
 
 class ResultInline(admin.TabularInline):
@@ -15,8 +16,3 @@ class ResultInline(admin.TabularInline):
 @admin.register(Enrolment)
 class EnrolmentAdmin(admin.ModelAdmin):
     inlines = [ResultInline]
-
-
-@admin.register(Result)
-class ResultAdmin(admin.ModelAdmin):
-    pass
