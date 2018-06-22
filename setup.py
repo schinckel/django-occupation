@@ -7,8 +7,13 @@ setup(
     url="https://bitbucket.org/schinckel/django-occupation",
     author="Matthew Schinckel",
     author_email="matt@schinckel.net",
-    packages=find_packages(),
+    packages=find_packages('src', exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
+    package_dir={'': 'src'},
     include_package_data=True,
+    exclude_package_data={
+        '': ['test*.py', 'tests/*.env', '**/tests.py'],
+    },
+    python_requires='>=3.6',
     install_requires=[
         'django',
         'psycopg2-binary',  # or psycopg2cffi under pypy
