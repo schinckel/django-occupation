@@ -8,7 +8,7 @@ PAPER         =
 BUILDDIR      = build
 
 APIDOC        = SPHINX_APIDOC_OPTIONS=members,show-inheritance sphinx-apidoc
-APISOURCE     = ../occupation
+APISOURCE     = ../src/occupation
 APITARGET     = source/code
 APIOPTS       = -f -T -e
 APIIGNORES    = ../tests

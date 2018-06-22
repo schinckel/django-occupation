@@ -1,6 +1,14 @@
 occupation package
 ==================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    occupation.management
+    occupation.migrations
+
 Submodules
 ----------
 

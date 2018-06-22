@@ -1,6 +1,13 @@
 occupation.management package
 =============================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    occupation.management.commands
+
 Module contents
 ---------------
 
