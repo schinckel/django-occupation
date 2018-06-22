@@ -1,10 +1,26 @@
 from django.apps import apps
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 from django.db import connection, transaction
 
 
 def get_tenant_model(apps=apps):
-    return apps.get_model(*settings.OCCUPATION_TENANT_MODEL.split('.'))
+    try:
+        return apps.get_model(*settings.OCCUPATION_TENANT_MODEL.split('.'))
+    except AttributeError:
+        raise ImproperlyConfigured(
+            "OCCUPATION_TENANT_MODEL is not set: is 'occupation' in your INSTALLED_APPS?"
+        )
+    except ValueError:
+        raise ImproperlyConfigured(
+            "OCCUPATION_TENANT_MODEL must be of the form 'app_label.model_name'."
+        )
+    except LookupError:
+        raise ImproperlyConfigured(
+            "OCCUPATION_TENANT_MODEL refers to the model '{0!s}' that has not been installed.".format(
+                settings.OCCUPATION_TENANT_MODEL
+            )
+        )
 
 
 def get_tenant_fk(model):
