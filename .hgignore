@@ -1,7 +1,8 @@
 syntax: glob
 
 .tox
-.coverage*
+.coverage
+.coverage.*
 htmlcov
 
 *.pyc

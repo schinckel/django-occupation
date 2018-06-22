@@ -1,0 +1,9 @@
+[run]
+branch = True
+source = occupation
+
+[paths]
+source =
+  src/occupation
+  .tox/*/lib/python*/site-packages/occupation
+  .tox/pypy*/site-packages/occupation
