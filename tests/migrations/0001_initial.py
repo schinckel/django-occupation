@@ -17,6 +17,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(unique=True, max_length=10)),
                 ('status', models.BooleanField(default=False)),
                 ('factor', models.PositiveSmallIntegerField(default=7)),
+                ('tenant', models.ForeignKey(on_delete=models.CASCADE, to='occupation.Tenant')),
             ],
         ),
         migrations.CreateModel(

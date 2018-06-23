@@ -2,6 +2,7 @@ from django.db import models
 
 
 class AwareModel(models.Model):
+    tenant = models.ForeignKey('occupation.Tenant', on_delete=models.CASCADE)
     name = models.CharField(max_length=10, unique=True)
     status = models.BooleanField(default=False)
     factor = models.PositiveSmallIntegerField(default=7)
