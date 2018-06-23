@@ -19,14 +19,14 @@ def clear_tenant(session):
     session.pop('active_tenant_name', None)
 
 
-def set_tenant(session, tenant):
+def set_tenant(session, tenant: Tenant):
     session.update({
         'active_tenant': tenant.pk,
         'active_tenant_name': tenant.name
     })
 
 
-def select_tenant(request, tenant):
+def select_tenant(request, tenant: str):
     """
     Ensure that the request/user is allowed to select this tenant,
     and then set that in the session.
@@ -45,10 +45,6 @@ def select_tenant(request, tenant):
     if not user.is_authenticated:
         clear_tenant(session)
         raise Forbidden()
-
-    # We need to query the db, so we need the primary key.
-    if getattr(tenant, 'pk', None):
-        tenant = tenant.pk
 
     # If no change, don't hit the database.
     if tenant == str(session.get('active_tenant')):
@@ -93,7 +89,8 @@ def SelectTenant(get_response):
 
 def ActivateTenant(get_response):
     def middleware(request):
-        if request.user.pk:
+        # Should we put this into the one query?
+        if request.user.is_authenticated and request.user.pk:
             connection.cursor().execute('SET occupation.user_id = %s', [request.user.pk])
         activate_tenant(request.session.get('active_tenant', ''))
         return get_response(request)
