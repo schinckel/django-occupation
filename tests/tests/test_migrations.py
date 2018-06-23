@@ -9,18 +9,18 @@ from occupation.utils import enable_row_level_security, disable_row_level_securi
 
 class TestMigrationOperations(TestCase):
     def test_enable_disable_rls(self):
-        enable_row_level_security('tests', 'AwareModel', apps)
-        disable_row_level_security('tests', 'AwareModel', apps)
+        enable_row_level_security('tests', 'RelatedModel', apps)
+        disable_row_level_security('tests', 'RelatedModel', apps)
 
     def test_enable_fails_if_no_fk_to_tenant(self):
         with self.assertRaises(Exception) as exc:
-            enable_row_level_security('tests', 'NaiveModel', apps)
+            enable_row_level_security('tests', 'DistinctModel', apps)
             self.assertEqual('Unable to find any FK chains back to tenant model.', exc.message)
 
     def test_disable_fails_when_rls_not_enabled(self):
         with self.assertRaises(ProgrammingError):
-            disable_row_level_security('tests', 'AwareModel', apps)
+            disable_row_level_security('tests', 'RelatedModel', apps)
 
     @unittest.expectedFailure
     def test_enable_rls_with_superuser_policy(self):
-        enable_row_level_security('tests', 'AwareModel', apps, superuser=True)
+        enable_row_level_security('tests', 'RelatedModel', apps, superuser=True)
