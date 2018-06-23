@@ -93,3 +93,27 @@ class TestMiddleware(TestCase):
 
         response = self.client.post('/', HTTP_X_CHANGE_TENANT=a.pk)
         self.assertEqual(a.pk, int(response.content))
+
+    def test_forbidden_tenant(self):
+        a, b, c = self.build_tenants(3)
+        user = User.objects.create(**CREDENTIALS)
+        self.client.force_login(user)
+
+        response = self.client.get('/', {'__tenant': a.pk}, follow=True)
+        self.assertEqual(403, response.status_code)
+
+        user.visible_tenants.add(a)
+        response = self.client.get('/', {'__tenant': a.pk}, follow=True)
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(a.pk, int(response.content))
+
+    def test_deactivate_tenant(self):
+        a = self.build_tenants(1)[0]
+        user = User.objects.create(**CREDENTIALS)
+        user.visible_tenants.add(a)
+        self.client.force_login(user)
+
+        self.client.get('/__change_tenant__/{}/'.format(a.pk))
+        self.assertEqual(a.pk, self.client.session['active_tenant'])
+        self.client.get('/__change_tenant__//')
+        self.assertFalse('active_tenant' in self.client.session)
