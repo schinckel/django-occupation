@@ -11,9 +11,6 @@ class AbstractTenant(models.Model):
     class Meta:
         abstract = True
 
-    def __str__(self):
-        return '{name} ({pk})'.format(name=self.name, pk=self.pk)
-
 
 class Tenant(AbstractTenant):
     users = models.ManyToManyField(
