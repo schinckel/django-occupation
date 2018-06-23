@@ -51,7 +51,7 @@ def select_tenant(request, tenant):
         tenant = tenant.pk
 
     # If no change, don't hit the database.
-    if tenant == session.get('active_tenant'):
+    if tenant == str(session.get('active_tenant')):
         return
 
     # Can this user view this tenant?

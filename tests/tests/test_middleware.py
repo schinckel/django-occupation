@@ -118,7 +118,7 @@ class TestMiddleware(TestCase):
         self.client.get('/__change_tenant__//')
         self.assertFalse('active_tenant' in self.client.session)
 
-    def test_tenant_is_already_active_doesnt_hit_database(self):
+    def test_tenant_is_already_active_does_not_hit_database(self):
         a, b = self.build_tenants(2)
 
         user = User.objects.create(**CREDENTIALS)
@@ -128,5 +128,5 @@ class TestMiddleware(TestCase):
         self.client.get('/__change_tenant__/{}/'.format(a.pk))
         self.assertEqual(a.pk, self.client.session['active_tenant'])
 
-        with self.assertNumQueries(2):
+        with self.assertNumQueries(1):
             self.client.get('/__change_tenant__/{}/'.format(a.pk))
