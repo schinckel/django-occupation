@@ -64,5 +64,7 @@ TEMPLATES = [
     },
 ]
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+
 # SHARED_MODELS = ['tests.SettingsSharedModel']
 # PRIVATE_MODELS = ['tests.SettingsPrivateModel']
