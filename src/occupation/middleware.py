@@ -5,11 +5,13 @@ from django.utils.translation import ugettext as _
 
 from .exceptions import Forbidden
 from .signals import session_tenant_changed
-from .utils import activate_tenant
+from .utils import activate_tenant, get_tenant_model
 
 TENANT_CHANGED = _('Tenant changed to %(active_tenant)s')
 TENANT_CLEARED = _('Tenant deselected')
 UNABLE_TO_CHANGE_TENANT = _('You may not select that tenant')
+
+Tenant = get_tenant_model()
 
 
 def clear_tenant(session):
@@ -55,7 +57,7 @@ def select_tenant(request, tenant):
     # Can this user view this tenant?
     try:
         tenant = user.visible_tenants.get(pk=tenant)
-    except user.visible_tenants.DoesNotExist:
+    except Tenant.DoesNotExist:
         raise Forbidden()
     else:
         set_tenant(session, tenant)

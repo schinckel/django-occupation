@@ -18,7 +18,7 @@ def echo_schema(request):
     data = ""
     if request.GET:
         data = "\n" + "\n".join("{0!s}={1!s}".format(*x) for x in request.GET.items())
-    return HttpResponse('{0!s}'.format(request.session.get('schema')) + data)
+    return HttpResponse('{0!s}'.format(request.session.get('active_tenant')) + data)
 
 
 def change_schema_view(request):

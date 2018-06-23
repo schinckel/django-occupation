@@ -12,6 +12,11 @@ CREDENTIALS = {
     'password': 'test'
 }
 
+SU_CREDENTIALS = {
+    'username': 'su',
+    'password': 'su',
+}
+
 
 class TestMiddleware(TestCase):
     def build_tenants(self, count):
@@ -41,7 +46,50 @@ class TestMiddleware(TestCase):
 
         user = User.objects.create(**CREDENTIALS)
         user.visible_tenants.add(a)
-        self.client.login(**CREDENTIALS)
+        self.client.force_login(user)
 
         response = self.client.get('/')
         self.assertEqual('{}'.format(a.pk), response.content)
+
+    def test_middleware_activation_on_get(self):
+        a, b = self.build_tenants(2)
+
+        user = User.objects.create(**CREDENTIALS)
+        user.visible_tenants.add(a, b)
+        self.client.force_login(user)
+
+        self.client.get('/__change_tenant__/{}/'.format(b.pk))
+        response = self.client.get('/')
+        self.assertEqual(b.pk, int(response.content))
+
+        response = self.client.get('/', {'__tenant': a.pk}, follow=True)
+        self.assertEqual(a.pk, int(response.content))
+
+        response = self.client.get('/', {'__tenant': b.pk, 'foo': 'bar'}, follow=True)
+        self.assertEqual(b.pk, self.client.session['active_tenant'])
+        self.assertEqual(b'foo=bar', response.content.split(b'\n')[1])
+
+        response = self.client.get('/', HTTP_X_CHANGE_TENANT=a.pk)
+        self.assertEqual(a.pk, int(response.content))
+
+    def test_middleware_activation_on_post(self):
+        a, b = self.build_tenants(2)
+
+        user = User.objects.create(**CREDENTIALS)
+        user.visible_tenants.add(a, b)
+        self.client.force_login(user)
+
+        response = self.client.post('/__change_tenant__/{}/'.format(b.pk))
+        self.assertEqual(b.pk, self.client.session['active_tenant'])
+
+        response = self.client.post('/?__tenant={}'.format(a.pk), follow=True)
+        self.assertEqual(a.pk, self.client.session['active_tenant'])
+
+        response = self.client.post('/?__tenant={}&foo=bar'.format(b.pk), follow=True)
+        self.assertEqual(b.pk, self.client.session['active_tenant'])
+        tenant, query = response.content.split(b'\n')
+        self.assertEqual(b.pk, int(tenant))
+        self.assertEqual(b'foo=bar', query)
+
+        response = self.client.post('/', HTTP_X_CHANGE_TENANT=a.pk)
+        self.assertEqual(a.pk, int(response.content))
