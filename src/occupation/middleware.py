@@ -13,8 +13,8 @@ UNABLE_TO_CHANGE_TENANT = _('You may not select that tenant')
 
 
 def clear_tenant(session):
-    session.pop('active_tenant')
-    session.pop('active_tenant_name')
+    session.pop('active_tenant', None)
+    session.pop('active_tenant_name', None)
 
 
 def set_tenant(session, tenant):
@@ -38,10 +38,11 @@ def select_tenant(request, tenant):
         clear_tenant(session)
         return
 
-    # Clear the tenant if we have a non-authenticated user.
+    # Clear the tenant if we have a non-authenticated user, and raise an exception,
+    # because non-authenticated users may not switch tenants?
     if not user.is_authenticated:
         clear_tenant(session)
-        return
+        raise Forbidden()
 
     # We need to query the db, so we need the primary key.
     if getattr(tenant, 'pk', None):
