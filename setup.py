@@ -10,6 +10,7 @@ setup(
     packages=find_packages('src', exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
     package_dir={'': 'src'},
     include_package_data=True,
+    package_data={'occupation': ['templates/**.html']},
     exclude_package_data={
         '': ['test*.py', 'tests/*.env', '**/tests.py'],
     },

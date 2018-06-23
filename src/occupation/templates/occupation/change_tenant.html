@@ -1,0 +1,54 @@
+{% if not active_tenant or tenant_choices|length > 1 %}
+
+  <form style="display: inline-block;">
+
+    <label style="font-size: small; color: #ffc">
+      Viewing:
+
+      {% comment %}
+        We should make it so that the page we are viewing is able to provide us
+        with a url we should redirect to in the case there is no object at the
+        url when we have changed schema.
+      {% endcomment %}
+
+      <select {% if disabled %}disabled="disabled"{% endif %}
+              name="__tenant"
+              id="__tenant_list"
+              onchange="window.location.search = '?__tenant=' + this.value;"
+              style="background: none;
+                     -webkit-appearance: menulist-button;
+                     color: #ffc;
+                     border-color: rgba(255, 255, 204, 0.63);">
+        <option value="">No tenant. Please select...</option>
+        {% for tenant in tenant_choices %}
+          <option value="{{ tenant.0 }}"
+                  {% if tenant.0 == active_tenant %}selected="selected"{% endif %}>
+            {{ tenant.1 }}
+          </option>
+        {% endfor %}
+      </select>
+
+    </label>
+
+    <button type="submit" id="tenant-change-submit">
+      >>
+    </button>
+
+  </form>
+
+  {% if disabled %}
+    <em style="font-size: small">
+      Unable to change tenant while viewing this object.
+    </em>
+  {% endif %}
+
+<script>
+  // Remove the button: we will be auto-submitting on change.
+  document.getElementById('tenant-change-submit').remove();
+  {% if visible_tenants|length > 15 %}
+  // Replace the select with a datalist.
+
+  {% endif %}
+</script>
+
+{% endif %}

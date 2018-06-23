@@ -1,0 +1,2 @@
+recursive-include src/occupation/templates *.html
+recursive-include src/occupation/sql *.sql

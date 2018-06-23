@@ -22,7 +22,7 @@ def echo_schema(request):
 
 
 def change_schema_view(request):
-    return render(request, 'boardinghouse/change_schema.html', {})
+    return render(request, 'occupation/change_tenant.html', {})
 
 
 def aware_objects_view(request):
