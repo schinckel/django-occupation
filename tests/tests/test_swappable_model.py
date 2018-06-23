@@ -26,6 +26,12 @@ class TestSwappableModel(TestCase):
         with self.assertRaises(ImproperlyConfigured):
             get_tenant_model()
 
+    @modify_settings()
+    def test_missing_setting(self):
+        del settings.OCCUPATION_TENANT_MODEL
+        with self.assertRaises(ImproperlyConfigured):
+            get_tenant_model()
+
     @unittest.expectedFailure
     @modify_settings()
     def test_swappable_model_changes_schema_template_verbose_names(self):
