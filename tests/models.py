@@ -11,3 +11,8 @@ class RelatedModel(models.Model):
 class DistinctModel(models.Model):
     name = models.CharField(max_length=10, unique=True)
     status = models.BooleanField(default=False)
+
+
+class RestrictedModel(models.Model):
+    tenant = models.ForeignKey('occupation.Tenant', on_delete=models.CASCADE)
+    name = models.CharField(max_length=10, unique=True)

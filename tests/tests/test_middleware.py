@@ -1,11 +1,9 @@
 import unittest
 
 from django.contrib.auth.models import User
-from django.test import TestCase
 
-from occupation.utils import get_tenant_model
+from .base import TenantTestCase, Tenant
 
-Tenant = get_tenant_model()
 
 CREDENTIALS = {
     'username': 'test',
@@ -18,15 +16,7 @@ SU_CREDENTIALS = {
 }
 
 
-class TestMiddleware(TestCase):
-    def build_tenants(self, count):
-        tenants = [
-            Tenant(name='{}'.format(i))
-            for i in range(count)
-        ]
-        Tenant.objects.bulk_create(tenants)
-        return tenants
-
+class TestMiddleware(TenantTestCase):
     def test_view_without_tenant_aware_models_works_without_activation(self):
         response = self.client.get('/')
         self.assertEqual(200, response.status_code)
