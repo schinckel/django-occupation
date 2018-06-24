@@ -131,5 +131,24 @@ def check_installed_before_admin(app_configs=None, **kwargs):
     return []
 
 
+@register('settings')
+def check_database_role_does_not_bypass_rls(app_configs=None, **kwargs):
+    from django.conf import settings
+    from django.db import connection
+
+    with connection.cursor() as cursor:
+        role = settings.DATABASES['default']['USER']
+        cursor.execute('SELECT rolsuper, rolbypassrls FROM pg_roles WHERE rolname = %s', [role])
+        result = cursor.fetchone()
+        if any(result):
+            return [Error(
+                "Current database user '{}' appears to be able to bypass RLS".format(role),
+                id='occupation.E005',
+                hint='Change the user to a non-SUPERUSER, or remove the BYPASSRLS attribute.',
+            )]
+
+    return []
+
+
 def set_dummy_active_tenant(sender, connection, **kwargs):
     connection.cursor().execute("SET occupation.active_tenant = ''")

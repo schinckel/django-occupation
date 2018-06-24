@@ -1,4 +1,5 @@
 from copy import deepcopy
+import os
 
 from django.conf import settings
 from django.test import TestCase, modify_settings, override_settings
@@ -8,6 +9,7 @@ from occupation import apps
 
 class TestSettings(TestCase):
     def test_all_settings(self):
+        self.assertEqual([], apps.check_database_role_does_not_bypass_rls())
         self.assertEqual([], apps.check_session_middleware_installed())
         self.assertEqual([], apps.check_middleware_installed_correctly())
         self.assertEqual([], apps.check_context_processor_installed())
@@ -77,3 +79,10 @@ class TestSettings(TestCase):
     def test_context_processor_not_installed_but_using_jinja(self):
         errors = apps.check_context_processor_installed()
         self.assertEqual(0, len(errors))
+
+    @modify_settings()
+    def test_role_can_bypass_rls(self):
+        settings.DATABASES['default']['USER'] = os.environ['USER']
+        errors = apps.check_database_role_does_not_bypass_rls()
+        self.assertEqual(1, len(errors))
+        self.assertEqual('occupation.E005', errors[0].id)
