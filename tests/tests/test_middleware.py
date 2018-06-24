@@ -34,7 +34,7 @@ class TestMiddleware(TenantTestCase):
 
         self.assertEqual(2, Tenant.objects.count())
 
-        user = User.objects.create(**CREDENTIALS)
+        user = User.objects.create_user(**CREDENTIALS)
         user.visible_tenants.add(a)
         self.client.force_login(user)
 
@@ -44,7 +44,7 @@ class TestMiddleware(TenantTestCase):
     def test_middleware_activation_on_get(self):
         a, b = self.build_tenants(2)
 
-        user = User.objects.create(**CREDENTIALS)
+        user = User.objects.create_user(**CREDENTIALS)
         user.visible_tenants.add(a, b)
         self.client.force_login(user)
 
@@ -65,7 +65,7 @@ class TestMiddleware(TenantTestCase):
     def test_middleware_activation_on_post(self):
         a, b = self.build_tenants(2)
 
-        user = User.objects.create(**CREDENTIALS)
+        user = User.objects.create_user(**CREDENTIALS)
         user.visible_tenants.add(a, b)
         self.client.force_login(user)
 
@@ -86,7 +86,7 @@ class TestMiddleware(TenantTestCase):
 
     def test_forbidden_tenant(self):
         a, b, c = self.build_tenants(3)
-        user = User.objects.create(**CREDENTIALS)
+        user = User.objects.create_user(**CREDENTIALS)
         self.client.force_login(user)
 
         response = self.client.get('/', {'__tenant': a.pk}, follow=True)
@@ -99,7 +99,7 @@ class TestMiddleware(TenantTestCase):
 
     def test_deactivate_tenant(self):
         a = self.build_tenants(1)[0]
-        user = User.objects.create(**CREDENTIALS)
+        user = User.objects.create_user(**CREDENTIALS)
         user.visible_tenants.add(a)
         self.client.force_login(user)
 
@@ -111,7 +111,7 @@ class TestMiddleware(TenantTestCase):
     def test_tenant_is_already_active_does_not_hit_database(self):
         a, b = self.build_tenants(2)
 
-        user = User.objects.create(**CREDENTIALS)
+        user = User.objects.create_user(**CREDENTIALS)
         user.visible_tenants.add(a, b)
         self.client.force_login(user)
 

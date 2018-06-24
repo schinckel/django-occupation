@@ -81,10 +81,12 @@ def get_fk_chains(model, root, parents=()):
                 yield parents + chain
 
 
+DIRECT_LINK = "{fk}::TEXT = current_setting('occupation.active_tenant')"
+INDIRECT_LINK = "EXISTS (SELECT 1 FROM {related_table} WHERE {table_name}.{fk} = {related_table}.{pk})"
+
+
 def get_policy_clauses(model, tenant_model):
     fields = set(field[0] for field in get_fk_chains(model, tenant_model))
-    DIRECT_LINK = "{fk}::TEXT = current_setting('occupation.active_tenant')"
-    INDIRECT_LINK = "EXISTS (SELECT 1 FROM {related_table} WHERE {table_name}.{fk} = {related_table}.{pk})"
 
     return [
         (DIRECT_LINK if field.related_model is tenant_model else INDIRECT_LINK).format(

@@ -10,9 +10,11 @@ from occupation.utils import enable_row_level_security, disable_row_level_securi
 class TestMigrationOperations(TransactionTestCase):
     def test_enable_rls(self):
         enable_row_level_security('tests', 'RelatedModel', apps)
+        disable_row_level_security('tests', 'RelatedModel', apps)
 
     def test_disable_rls(self):
         disable_row_level_security('tests', 'RestrictedModel', apps)
+        enable_row_level_security('tests', 'RestrictedModel', apps)
 
     def test_enable_fails_if_no_fk_to_tenant(self):
         with self.assertRaises(Exception) as exc:
@@ -23,7 +25,7 @@ class TestMigrationOperations(TransactionTestCase):
         with self.assertRaises(ProgrammingError):
             disable_row_level_security('tests', 'RelatedModel', apps)
 
-    @unittest.expectedFailure
+    # @unittest.expectedFailure
     def test_enable_fails_when_rls_already_enabled(self):
         with self.assertRaises(ProgrammingError):
             enable_row_level_security('tests', 'RestrictedModel', apps)
