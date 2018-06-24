@@ -7,4 +7,8 @@ htmlcov
 
 *.pyc
 *.pyo
+__pycache__
 django_occupation.egg-info/
+.mypy_cache
+docs/build
+.DS_Store
