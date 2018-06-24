@@ -25,7 +25,6 @@ class TestMigrationOperations(TransactionTestCase):
         with self.assertRaises(ProgrammingError):
             disable_row_level_security('tests', 'RelatedModel', apps)
 
-    # @unittest.expectedFailure
     def test_enable_fails_when_rls_already_enabled(self):
         with self.assertRaises(ProgrammingError):
             enable_row_level_security('tests', 'RestrictedModel', apps)
