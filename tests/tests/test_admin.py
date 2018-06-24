@@ -47,3 +47,25 @@ class TestAdmin(TenantTestCase):
         self.client.get('/__change_tenant__/{}/'.format(a.pk))
         response = self.client.get('/admin/tests/restrictedmodel/')
         self.assertEqual(3, response.context['cl'].queryset.count())
+
+    def test_tenant_field_is_hidden_in_admin(self):
+        a, b = self.build_tenants(2)
+
+        user = self.user()
+        user.visible_tenants.add(a, b)
+        self.client.force_login(user)
+
+        self.client.get('/__change_tenant__/{}/'.format(a.pk))
+        response = self.client.get('/admin/tests/restrictedmodel/add/')
+        self.assertTrue('tenant' not in response.context['adminform'].form.fields)
+
+    def test_tenant_field_is_set_in_create(self):
+        a, b = self.build_tenants(2)
+
+        user = self.user()
+        user.visible_tenants.add(a, b)
+        self.client.force_login(user)
+
+        self.client.get('/__change_tenant__/{}/'.format(a.pk))
+        self.client.post('/admin/tests/restrictedmodel/add/', {'name': 'foo'})
+        self.assertEqual(a, RestrictedModel.objects.get().tenant)
