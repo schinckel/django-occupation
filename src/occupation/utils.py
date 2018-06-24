@@ -23,14 +23,6 @@ def get_tenant_model(apps=apps):
         )
 
 
-def get_tenant_fk(model):
-    Tenant = get_tenant_model()
-
-    for field in model._meta.fields:
-        if field.related_model is Tenant:
-            return field
-
-
 ENABLE_RLS = 'ALTER TABLE {table_name} ENABLE ROW LEVEL SECURITY'
 FORCE_RLS = 'ALTER TABLE {table_name} FORCE ROW LEVEL SECURITY'
 DISABLE_RLS = 'ALTER TABLE {table_name} DISABLE ROW LEVEL SECURITY'
