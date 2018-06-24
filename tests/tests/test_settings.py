@@ -1,7 +1,7 @@
 from copy import deepcopy
 
 from django.conf import settings
-from django.test import TestCase, modify_settings
+from django.test import TestCase, modify_settings, override_settings
 
 from occupation import apps
 
@@ -25,6 +25,8 @@ class TestSettings(TestCase):
         errors = apps.check_session_middleware_installed()
         self.assertEqual(1, len(errors))
         self.assertEqual('occupation.E001', errors[0].id)
+
+        self.assertEqual([], apps.check_middleware_installed_correctly())
 
     @modify_settings(MIDDLEWARE={
         'remove': apps.MIDDLEWARE,
@@ -62,3 +64,10 @@ class TestSettings(TestCase):
             errors = apps.check_context_processor_installed()
             self.assertEqual(1, len(errors))
             self.assertEqual('occupation.W001', errors[0].id)
+
+    @override_settings(TEMPLATES=[{
+        'BACKEND': 'django.template.backends.jinja2.Jinja2',
+    }])
+    def test_context_processor_not_installed_but_using_jinja(self):
+        errors = apps.check_context_processor_installed()
+        self.assertEqual(0, len(errors))
