@@ -69,3 +69,20 @@ class TestAdmin(TenantTestCase):
         self.client.get('/__change_tenant__/{}/'.format(a.pk))
         self.client.post('/admin/tests/restrictedmodel/add/', {'name': 'foo'})
         self.assertEqual(a, RestrictedModel.objects.get().tenant)
+
+    def test_existing_object_cannot_be_moved(self):
+        a, b = self.build_tenants(2)
+        user = self.user()
+        user.visible_tenants.add(a, b)
+
+        activate_tenant(a.pk)
+        obj = RestrictedModel.objects.create(tenant=a, name='b')
+
+        self.client.force_login(user)
+
+        # self.client.get('/__change_tenant__/{}/'.format(a.pk))
+        self.client.post('/admin/tests/restrictedmodel/{}/change/?__tenant={}'.format(obj.pk, a.pk), {
+            'name': 'a'
+        })
+        obj.refresh_from_db()
+        self.assertEqual('a', obj.name)
