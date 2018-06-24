@@ -56,6 +56,12 @@ class TestSettings(TestCase):
         self.assertEqual(1, len(errors))
         self.assertEqual('occupation.W002', errors[0].id)
 
+    @modify_settings(INSTALLED_APPS={
+        'remove': 'django.contrib.admin',
+    })
+    def test_admin_not_installed(self):
+        self.assertEqual([], apps.check_installed_before_admin())
+
     @modify_settings()
     def test_missing_context_manager(self):
         templates = deepcopy(settings.TEMPLATES)
