@@ -39,26 +39,26 @@ def patch_admin():
 
     admin.ModelAdmin.save_model = save_model
 
-    get_admin_url = admin.models.LogEntry.get_admin_url
-
-    def get_admin_url_with_tenant(self):
-        url = get_admin_url(self)
-
-        # Okay, we can't do this just yet because it will hit the database, and get
-        # an exception that it's not found (because this session may not be able to
-        # view it), and render as a deleted object.
-
-        # Our other alternative is to do what we did in django-boardinghouse and
-        # save that as an extra field.
-        instance = self.get_edited_object()
-        tenant_field = get_tenant_field(instance)
-        if tenant_field:
-            tenant_id = getattr(instance, tenant_field.attname)
-            if '?' in url:
-                url += '&__tenant={}'.format(tenant_id)
-            else:
-                url += '?__tenant={}'.format(tenant_id)
-
-        return url
-
-    admin.models.LogEntry.get_admin_url = get_admin_url_with_tenant
+    # get_admin_url = admin.models.LogEntry.get_admin_url
+    #
+    # def get_admin_url_with_tenant(self):
+    #     url = get_admin_url(self)
+    #
+    #     # Okay, we can't do this just yet because it will hit the database, and get
+    #     # an exception that it's not found (because this session may not be able to
+    #     # view it), and render as a deleted object.
+    #
+    #     # Our other alternative is to do what we did in django-boardinghouse and
+    #     # save that as an extra field.
+    #     instance = self.get_edited_object()
+    #     tenant_field = get_tenant_field(instance)
+    #     if tenant_field:
+    #         tenant_id = getattr(instance, tenant_field.attname)
+    #         if '?' in url:
+    #             url += '&__tenant={}'.format(tenant_id)
+    #         else:
+    #             url += '?__tenant={}'.format(tenant_id)
+    #
+    #     return url
+    #
+    # admin.models.LogEntry.get_admin_url = get_admin_url_with_tenant
