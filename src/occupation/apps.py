@@ -1,7 +1,6 @@
 from django.apps import AppConfig
 from django.core.checks import Error, Warning, register
 
-
 MIDDLEWARE = [
     'occupation.middleware.SelectTenant',
     'occupation.middleware.ActivateTenant',
