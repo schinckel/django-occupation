@@ -1,5 +1,7 @@
 from django.db import models
 
+from occupation.base import BaseRelatedModel
+
 
 class RelatedModel(models.Model):
     tenant = models.ForeignKey('occupation.Tenant', on_delete=models.CASCADE)
@@ -13,6 +15,5 @@ class DistinctModel(models.Model):
     status = models.BooleanField(default=False)
 
 
-class RestrictedModel(models.Model):
-    tenant = models.ForeignKey('occupation.Tenant', on_delete=models.CASCADE)
+class RestrictedModel(BaseRelatedModel):
     name = models.CharField(max_length=10, unique=True)
