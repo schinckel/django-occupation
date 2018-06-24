@@ -3,7 +3,7 @@ from django.contrib.auth.models import User, Permission
 from occupation.utils import activate_tenant
 
 from .base import TenantTestCase
-from ..models import RestrictedModel
+from ..models import DistinctModel, RestrictedModel
 
 
 class TestAdmin(TenantTestCase):
@@ -86,3 +86,15 @@ class TestAdmin(TenantTestCase):
         })
         obj.refresh_from_db()
         self.assertEqual('a', obj.name)
+
+    def test_distinct_models_are_not_affected(self):
+        a, b = self.build_tenants(2)
+        user = self.user()
+        user.visible_tenants.add(a, b)
+
+        self.client.force_login(user)
+        self.client.post('/admin/tests/distinctmodel/add/', {
+            'name': 'a',
+        })
+
+        self.assertEqual(1, DistinctModel.objects.count())
