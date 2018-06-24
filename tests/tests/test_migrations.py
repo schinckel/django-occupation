@@ -32,3 +32,7 @@ class TestMigrationOperations(TransactionTestCase):
     @unittest.expectedFailure
     def test_enable_rls_with_superuser_policy(self):
         enable_row_level_security('tests', 'RelatedModel', apps, superuser=True)
+
+    @unittest.expectedFailure
+    def test_disable_rls_with_superuser_policy(self):
+        disable_row_level_security('tests', 'RestrictedModel', apps, superuser=True)
