@@ -41,7 +41,7 @@ PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.MD5PasswordHasher',
 )
 AUTH_USER_MODEL = 'auth.User'
-SECRET_KEY = 'django-occupataion-sekret-keye'
+SECRET_KEY = 'django-occupation-sekret-keye'
 
 
 TEMPLATES = [
@@ -66,5 +66,4 @@ TEMPLATES = [
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 
-# SHARED_MODELS = ['tests.SettingsSharedModel']
-# PRIVATE_MODELS = ['tests.SettingsPrivateModel']
+ALLOWED_HOSTS = ['localhost']
