@@ -1,6 +1,9 @@
 [run]
 branch = True
 source = occupation
+plugins =
+  django_coverage_plugin
+
 
 [paths]
 source =

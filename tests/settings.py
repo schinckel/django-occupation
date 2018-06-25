@@ -50,6 +50,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'DIRS': [],
         'OPTIONS': {
+            'debug': True,
             'context_processors': [
                 'django.contrib.auth.context_processors.auth',
                 'django.template.context_processors.debug',
