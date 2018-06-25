@@ -6,7 +6,7 @@ from django.db import connection, transaction
 
 def get_tenant_model(apps=apps):
     try:
-        return apps.get_model(*settings.OCCUPATION_TENANT_MODEL.split('.'))
+        return apps.get_model(settings.OCCUPATION_TENANT_MODEL, require_ready=False)
     except AttributeError:
         raise ImproperlyConfigured(
             "OCCUPATION_TENANT_MODEL is not set: is 'occupation' in your INSTALLED_APPS?"
