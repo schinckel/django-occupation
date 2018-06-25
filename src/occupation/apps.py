@@ -13,8 +13,6 @@ class OccupationConfig(AppConfig):
     name = 'occupation'
 
     def ready(self):
-        # Apply settings from defaults, if they have not been overridden.
-
         # from . import receivers  # NOQA
         from django.db.backends.signals import connection_created
         connection_created.connect(set_dummy_active_tenant)
@@ -24,6 +22,8 @@ class OccupationConfig(AppConfig):
 
 
 def apply_settings_defaults():
+    "Apply settings from defaults, if they have not been overridden."
+
     from occupation import settings as default_settings
     from django.conf import settings, global_settings
 
