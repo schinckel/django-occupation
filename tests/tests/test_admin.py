@@ -107,4 +107,4 @@ class TestAdmin(TenantTestCase):
 
         response = self.client.get('/admin/')
         self.assertTemplateUsed(response, 'admin/change-tenant.html')
-        self.assertTrue('select name="__tenant"' in response.content)
+        self.assertTrue(b'select name="__tenant"' in response.content)
