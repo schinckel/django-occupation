@@ -98,3 +98,13 @@ class TestAdmin(TenantTestCase):
         })
 
         self.assertEqual(1, DistinctModel.objects.count())
+
+    def test_tenant_selector_is_in_admin(self):
+        a, b = self.build_tenants(2)
+        user = self.user()
+        user.visible_tenants.add(a, b)
+        self.client.force_login(user)
+
+        response = self.client.get('/admin/')
+        self.assertTemplateUsed(response, 'admin/change-tenant.html')
+        self.assertTrue('select name="__tenant"' in response.content)
