@@ -4,7 +4,9 @@ from django.db.backends.base.schema import (
 )
 from django.db.migrations.state import ProjectState
 
-from occupation.utils import disable_row_level_security, enable_row_level_security
+from occupation.utils import (
+    disable_row_level_security, enable_row_level_security,
+)
 
 
 class EnableRowLevelSecurity(migrations.operations.base.Operation):

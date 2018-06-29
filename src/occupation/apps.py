@@ -3,7 +3,9 @@
 from typing import Optional, Sequence
 
 from django.apps import AppConfig
-from django.core.checks import CheckMessage, Error, Warning, register  # pylint: disable=redefined-builtin
+from django.core.checks import (  # pylint: disable=redefined-builtin
+    CheckMessage, Error, Warning, register,
+)
 from django.db import DefaultConnectionProxy
 
 MIDDLEWARE = [
