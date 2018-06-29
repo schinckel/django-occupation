@@ -1,10 +1,19 @@
+from typing import Type, Sequence, Iterator, List
 from django.apps import apps
+from django.apps.registry import Apps
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.db import connection, transaction
+from django.db.models import Field, Model
+
+from occupation.models import AbstractBaseTenant
+
+ModelType = Type[Model]
+TenantType = Type[AbstractBaseTenant]
+Fields = List[Field]
 
 
-def get_tenant_model(apps=apps):
+def get_tenant_model(apps: Apps=apps) -> TenantType:
     try:
         return apps.get_model(settings.OCCUPATION_TENANT_MODEL, require_ready=False)
     except AttributeError:
@@ -35,7 +44,7 @@ CREATE POLICY superuser_access_tenant_data ON {table_name} USING (is_superuser(c
 DROP_SUPERUSER_POLICY = 'DROP POLICY superuser_access_tenant_data ON {table_name}'
 
 
-def enable_row_level_security(app_label, model_name, apps=apps, superuser=False):
+def enable_row_level_security(app_label: str, model_name: str, apps: Apps=apps, superuser: bool=False) -> None:
     model = apps.get_model(app_label, model_name)
 
     policy_clauses = get_policy_clauses(model, get_tenant_model(apps))
@@ -57,7 +66,7 @@ def enable_row_level_security(app_label, model_name, apps=apps, superuser=False)
                 cursor.execute(CREATE_SUPERUSER_POLICY.format(**data))
 
 
-def disable_row_level_security(app_label, model_name, apps=apps, superuser=False):
+def disable_row_level_security(app_label: str, model_name: str, apps: Apps=apps, superuser: bool=False) -> None:
     model = apps.get_model(app_label, model_name)
 
     data = {
@@ -72,12 +81,15 @@ def disable_row_level_security(app_label, model_name, apps=apps, superuser=False
                 cursor.execute(DROP_SUPERUSER_POLICY.format(**data))
 
 
-def get_fk_chains(model, root, parents=()):
+def get_fk_chains(model: ModelType, root: TenantType, parents: Fields=None) -> Iterator[Fields]:
+    if not parents:
+        parents = []
+
     for field in model._meta.fields:
         if field.related_model is root:
-            yield parents + (field,)
+            yield parents + [field]
         elif field.related_model:
-            for chain in get_fk_chains(field.related_model, root, parents + (field,)):
+            for chain in get_fk_chains(field.related_model, root, parents + [field]):
                 yield parents + chain
 
 
@@ -85,7 +97,7 @@ DIRECT_LINK = "{fk}::TEXT = current_setting('occupation.active_tenant')"
 INDIRECT_LINK = "EXISTS (SELECT 1 FROM {related_table} WHERE {table_name}.{fk} = {related_table}.{pk})"
 
 
-def get_policy_clauses(model, tenant_model):
+def get_policy_clauses(model: ModelType, tenant_model: TenantType) -> Sequence[str]:
     fields = set(field[0] for field in get_fk_chains(model, tenant_model))
 
     return [
@@ -98,9 +110,9 @@ def get_policy_clauses(model, tenant_model):
     ]
 
 
-def db_column(field):
+def db_column(field: Field) -> str:
     return field.db_column or field.attname
 
 
-def activate_tenant(tenant_id):
+def activate_tenant(tenant_id: str) -> None:
     connection.cursor().execute("SET occupation.active_tenant = %s", [tenant_id])

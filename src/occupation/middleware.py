@@ -1,9 +1,14 @@
+from typing import Callable
+
+from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.sessions.backends.base import SessionBase as Session
 from django.db import connection
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 
 from .exceptions import Forbidden
+from .models import AbstractBaseTenant
 from .signals import session_tenant_changed
 from .utils import activate_tenant, get_tenant_model
 
@@ -14,26 +19,27 @@ UNABLE_TO_CHANGE_TENANT = _('You may not select that tenant')
 Tenant = get_tenant_model()
 
 
-def clear_tenant(session):
+def clear_tenant(session: Session) -> None:
     session.pop('active_tenant', None)
     session.pop('active_tenant_name', None)
 
 
-def set_tenant(session, tenant: Tenant):
+def set_tenant(session: Session, tenant: AbstractBaseTenant) -> None:
     session.update({
         'active_tenant': tenant.pk,
         'active_tenant_name': tenant.name
     })
 
 
-def select_tenant(request, tenant: str):
+def select_tenant(request: HttpRequest, tenant: str) -> None:
     """
     Ensure that the request/user is allowed to select this tenant,
     and then set that in the session.
 
     Does not actually activate the tenant.
     """
-    session, user = request.session, request.user
+    session: Session = request.session
+    user: AbstractBaseUser = request.user
 
     # Clear the tenant (deselect)
     if not tenant:
@@ -52,16 +58,16 @@ def select_tenant(request, tenant: str):
 
     # Can this user view this tenant?
     try:
-        tenant = user.visible_tenants.get(pk=tenant)
+        tenant_instance: AbstractBaseTenant = user.visible_tenants.get(pk=tenant)
     except Tenant.DoesNotExist:
         raise Forbidden()
     else:
-        set_tenant(session, tenant)
-        session_tenant_changed.send(sender=request, tenant=tenant, user=user, session=session)
+        set_tenant(session, tenant_instance)
+        session_tenant_changed.send(sender=request, tenant=tenant_instance, user=user, session=session)
 
 
-def SelectTenant(get_response):
-    def middleware(request):
+def SelectTenant(get_response: Callable) -> Callable:
+    def middleware(request: HttpRequest) -> HttpResponse:
         try:
             if request.path.startswith('/__change_tenant__/'):
                 select_tenant(request, request.path.split('/')[2])
@@ -87,8 +93,8 @@ def SelectTenant(get_response):
     return middleware
 
 
-def ActivateTenant(get_response):
-    def middleware(request):
+def ActivateTenant(get_response: Callable) -> Callable:
+    def middleware(request: HttpRequest) -> HttpResponse:
         # Should we put this into the one query?
         if request.user.is_authenticated and request.user.pk:
             connection.cursor().execute('SET occupation.user_id = %s', [request.user.pk])

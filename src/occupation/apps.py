@@ -1,5 +1,8 @@
+from typing import Sequence, Optional
+
 from django.apps import AppConfig
-from django.core.checks import Error, Warning, register
+from django.core.checks import CheckMessage, Error, Warning, register
+from django.db import DefaultConnectionProxy
 
 MIDDLEWARE = [
     'occupation.middleware.SelectTenant',
@@ -8,11 +11,14 @@ MIDDLEWARE = [
 
 CONTEXT = 'occupation.context_processors.tenants'
 
+AppConfigs = Sequence[AppConfig]
+Messages = Sequence[CheckMessage]
+
 
 class OccupationConfig(AppConfig):
     name = 'occupation'
 
-    def ready(self):
+    def ready(self) -> None:
         # from . import receivers  # NOQA
         from django.db.backends.signals import connection_created
         connection_created.connect(set_dummy_active_tenant)
@@ -21,7 +27,7 @@ class OccupationConfig(AppConfig):
         patch_admin()
 
 
-def apply_settings_defaults():
+def apply_settings_defaults() -> None:
     "Apply settings from defaults, if they have not been overridden."
 
     from occupation import settings as default_settings
@@ -38,14 +44,15 @@ def apply_settings_defaults():
 apply_settings_defaults()
 
 
-def session_middleware_index(settings):
+def session_middleware_index(settings) -> Optional[int]:
     for i, middleware in enumerate(settings.MIDDLEWARE):
         if middleware.endswith('.SessionMiddleware'):
             return i
+    return None
 
 
 @register('settings')
-def check_session_middleware_installed(app_configs=None, **kwargs):
+def check_session_middleware_installed(app_configs: AppConfigs=None, **kwargs) -> Messages:
     from django.conf import settings
 
     if session_middleware_index(settings) is None:
@@ -58,7 +65,7 @@ def check_session_middleware_installed(app_configs=None, **kwargs):
 
 
 @register('settings')
-def check_middleware_installed_correctly(app_configs=None, **kwargs):
+def check_middleware_installed_correctly(app_configs: AppConfigs=None, **kwargs) -> Messages:
     from django.conf import settings
 
     errors = []
@@ -99,7 +106,7 @@ def check_middleware_installed_correctly(app_configs=None, **kwargs):
 
 
 @register('settings')
-def check_context_processor_installed(app_configs=None, **kwargs):
+def check_context_processor_installed(app_configs: AppConfigs=None, **kwargs) -> Messages:
     # Warning if not.
     from django.conf import settings
 
@@ -121,7 +128,7 @@ def check_context_processor_installed(app_configs=None, **kwargs):
 
 
 @register('settings')
-def check_installed_before_admin(app_configs=None, **kwargs):
+def check_installed_before_admin(app_configs: AppConfigs=None, **kwargs) -> Messages:
     from django.conf import settings
 
     # Warning if not, as we can't override templates.
@@ -137,7 +144,7 @@ def check_installed_before_admin(app_configs=None, **kwargs):
 
 
 @register('settings')
-def check_database_role_does_not_bypass_rls(app_configs=None, **kwargs):
+def check_database_role_does_not_bypass_rls(app_configs: AppConfigs=None, **kwargs) -> Messages:
     from django.conf import settings
     from django.db import connection
 
@@ -155,5 +162,5 @@ def check_database_role_does_not_bypass_rls(app_configs=None, **kwargs):
     return []
 
 
-def set_dummy_active_tenant(sender, connection, **kwargs):
+def set_dummy_active_tenant(sender, connection: DefaultConnectionProxy, **kwargs) -> None:
     connection.cursor().execute("SET occupation.active_tenant = ''")

@@ -3,7 +3,7 @@ from django.db import models
 from django.utils.translation import ugettext as _
 
 
-class AbstractTenant(models.Model):
+class AbstractBaseTenant(models.Model):
     tenant_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=256, unique=True)
     is_active = models.BooleanField(default=True)
@@ -12,7 +12,7 @@ class AbstractTenant(models.Model):
         abstract = True
 
 
-class Tenant(AbstractTenant):
+class Tenant(AbstractBaseTenant):
     users = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         blank=True,
