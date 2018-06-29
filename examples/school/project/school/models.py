@@ -3,10 +3,10 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.db import models
 
-from occupation.models import AbstractTenant
+from occupation.models import AbstractBaseTenant
 
 
-class School(AbstractTenant):
+class School(AbstractBaseTenant):
     users = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         blank=True,
