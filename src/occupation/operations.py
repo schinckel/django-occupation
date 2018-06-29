@@ -31,8 +31,8 @@ class EnableRowLevelSecurity(migrations.operations.base.Operation):
     ) -> None:
         disable_row_level_security(app_label, self.model_name, apps=to_state.apps, superuser=self.superuser)
 
-    def state_forwards(self, app_label: str, state: ProjectState) -> None:
+    def state_forwards(self, app_label: str, state: ProjectState) -> None:  # pragma: no cover
         pass
 
-    def state_backwards(self, app_label: str, state: ProjectState) -> None:
+    def state_backwards(self, app_label: str, state: ProjectState) -> None:  # pragma: no cover
         pass
