@@ -1,7 +1,9 @@
+# pylint: disable=unused-argument
+
 from typing import Optional, Sequence
 
 from django.apps import AppConfig
-from django.core.checks import CheckMessage, Error, Warning, register
+from django.core.checks import CheckMessage, Error, Warning, register  # pylint: disable=redefined-builtin
 from django.db import DefaultConnectionProxy
 
 MIDDLEWARE = [
@@ -23,7 +25,7 @@ class OccupationConfig(AppConfig):
         from django.db.backends.signals import connection_created
         connection_created.connect(set_dummy_active_tenant)
 
-        from .admin import patch_admin
+        from occupation.admin import patch_admin
         patch_admin()
 
 

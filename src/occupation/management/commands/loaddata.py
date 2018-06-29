@@ -7,7 +7,7 @@ query, and RLS should apply to that.
 """
 from django.core.management.commands import loaddata
 
-from ...utils import activate_tenant
+from occupation.utils import activate_tenant
 
 
 class Command(loaddata.Command):

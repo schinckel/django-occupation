@@ -1,12 +1,12 @@
-from typing import Sequence
+from typing import Optional, Sequence
 
 from django.contrib import admin
 from django.db.models import Field, Model
 from django.forms import Form
 from django.http import HttpRequest
 
-from .models import Tenant
-from .utils import get_tenant_model
+from occupation.models import Tenant
+from occupation.utils import get_tenant_model
 
 
 class TenantAdmin(admin.ModelAdmin):
@@ -20,10 +20,11 @@ if get_tenant_model() == Tenant:
 def patch_admin() -> None:
     TenantModel = get_tenant_model()
 
-    def get_tenant_field(model: type) -> Field:
+    def get_tenant_field(model: type) -> Optional[Field]:
         for field in model._meta.fields:  # type: ignore
             if getattr(field, 'related_model', None) == TenantModel:
                 return field
+        return None
 
     class AutoTenantMixin:
         model: Model

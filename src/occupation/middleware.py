@@ -7,10 +7,10 @@ from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 
-from .exceptions import Forbidden
-from .models import AbstractBaseTenant
-from .signals import session_tenant_changed
-from .utils import activate_tenant, get_tenant_model
+from occupation.exceptions import Forbidden
+from occupation.models import AbstractBaseTenant
+from occupation.signals import session_tenant_changed
+from occupation.utils import activate_tenant, get_tenant_model
 
 TENANT_CHANGED = _('Tenant changed to %(active_tenant)s')
 TENANT_CLEARED = _('Tenant deselected')
