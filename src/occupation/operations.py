@@ -1,6 +1,8 @@
 from django.db import migrations
+from django.db.backends.base.schema import (
+    BaseDatabaseSchemaEditor as SchemaEditor,
+)
 from django.db.migrations.state import ProjectState
-from django.db.backends.base.schema import BaseDatabaseSchemaEditor as SchemaEditor
 
 from .utils import disable_row_level_security, enable_row_level_security
 

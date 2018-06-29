@@ -1,4 +1,5 @@
-from typing import Type, Sequence, Iterator, List
+from typing import Iterator, List, Sequence, Type
+
 from django.apps import apps
 from django.apps.registry import Apps
 from django.conf import settings

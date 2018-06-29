@@ -1,4 +1,4 @@
-from typing import Sequence, Optional
+from typing import Optional, Sequence
 
 from django.apps import AppConfig
 from django.core.checks import CheckMessage, Error, Warning, register

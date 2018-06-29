@@ -1,7 +1,7 @@
 from typing import Sequence
 
 from django.contrib import admin
-from django.db.models import Model, Field
+from django.db.models import Field, Model
 from django.forms import Form
 from django.http import HttpRequest
 
