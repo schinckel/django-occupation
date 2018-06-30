@@ -1,4 +1,7 @@
-def tenants(request):
+from django.http import HttpRequest
+
+
+def tenants(request: HttpRequest) -> dict:
     if request.user.is_anonymous:
         return {}
 

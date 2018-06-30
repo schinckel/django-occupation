@@ -1,7 +1,12 @@
-from django.contrib import admin
+from typing import Optional, Sequence
 
-from .models import Tenant
-from .utils import get_tenant_model
+from django.contrib import admin
+from django.db.models import Field, Model
+from django.forms import Form
+from django.http import HttpRequest
+
+from occupation.models import Tenant
+from occupation.utils import get_tenant_model
 
 
 class TenantAdmin(admin.ModelAdmin):
@@ -12,17 +17,20 @@ if get_tenant_model() == Tenant:
     admin.site.register(Tenant, TenantAdmin)
 
 
-def patch_admin():
+def patch_admin() -> None:
     TenantModel = get_tenant_model()
 
-    def get_tenant_field(model):
-        for field in model._meta.fields:
+    def get_tenant_field(model: type) -> Optional[Field]:
+        for field in model._meta.fields:  # type: ignore
             if getattr(field, 'related_model', None) == TenantModel:
                 return field
+        return None
 
-    class AutoTenantMixin(object):
-        def get_fields(self, request, obj=None):
-            fields = super(AutoTenantMixin, self).get_fields(request, obj=obj)
+    class AutoTenantMixin:
+        model: Model
+
+        def get_fields(self, request: HttpRequest, obj: Model=None) -> Sequence[Field]:
+            fields = super(AutoTenantMixin, self).get_fields(request, obj=obj)  # type: ignore
             tenant_field = get_tenant_field(self.model)
             if tenant_field and tenant_field.name in fields:
                 fields.remove(tenant_field.name)
@@ -30,7 +38,7 @@ def patch_admin():
 
     admin.ModelAdmin.__bases__ = (AutoTenantMixin,) + admin.ModelAdmin.__bases__
 
-    def save_model(self, request, obj, form, change):
+    def save_model(self, request: HttpRequest, obj: Model, form: Form, change: bool) -> None:
         if not change:
             tenant_field = get_tenant_field(obj)
             if tenant_field:
