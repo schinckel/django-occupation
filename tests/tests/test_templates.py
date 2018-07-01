@@ -11,4 +11,4 @@ class TestTemplates(TestCase):
                 (1, 'One'),
             ]
         })
-        self.assertTrue(b'select name="__tenant"' in result)
+        self.assertTrue('select name="__tenant"' in result)
