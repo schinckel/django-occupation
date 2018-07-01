@@ -42,9 +42,7 @@ $$ LANGUAGE plpgsql""", "DROP FUNCTION set_tenant_field()"
 TRIGGER = """
 CREATE TRIGGER set_tenant_field
 BEFORE INSERT ON django_admin_log
-FOR EACH ROW EXECUTE PROCEDURE set_tenant_field()""", """
-DROP TRIGGER set_tenant_field
-BEFORE INSERT ON django_admin_log"""
+FOR EACH ROW EXECUTE PROCEDURE set_tenant_field()""", "DROP TRIGGER set_tenant_field ON django_admin_log"
 
 
 class Migration(migrations.Migration):
