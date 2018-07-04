@@ -1,6 +1,8 @@
 from typing import Optional, Sequence
 
 from django.contrib import admin
+from django.contrib.admin.models import LogEntry
+from django.db import models
 from django.db.models import Field, Model
 from django.forms import Form
 from django.http import HttpRequest
@@ -47,26 +49,24 @@ def patch_admin() -> None:
 
     admin.ModelAdmin.save_model = save_model
 
-    # get_admin_url = admin.models.LogEntry.get_admin_url
-    #
-    # def get_admin_url_with_tenant(self):
-    #     url = get_admin_url(self)
-    #
-    #     # Okay, we can't do this just yet because it will hit the database, and get
-    #     # an exception that it's not found (because this session may not be able to
-    #     # view it), and render as a deleted object.
-    #
-    #     # Our other alternative is to do what we did in django-boardinghouse and
-    #     # save that as an extra field.
-    #     instance = self.get_edited_object()
-    #     tenant_field = get_tenant_field(instance)
-    #     if tenant_field:
-    #         tenant_id = getattr(instance, tenant_field.attname)
-    #         if '?' in url:
-    #             url += '&__tenant={}'.format(tenant_id)
-    #         else:
-    #             url += '?__tenant={}'.format(tenant_id)
-    #
-    #     return url
-    #
-    # admin.models.LogEntry.get_admin_url = get_admin_url_with_tenant
+    if not getattr(LogEntry, 'tenant_id', None):
+        # Adding this value is delegated to a postgres trigger - that way it will always
+        # be set, without us having to query the database. We still need it as a field,
+        # because it's tricky to .annotate() in the place where it's used. Otherwise,
+        # we could write a cleaner version that just used default - however we can't do
+        # that here because Django will send an explicit NULL, but we would want it not
+        # to send it at all.
+        LogEntry.add_to_class(
+            'tenant_id',
+            models.IntegerField(blank=True, null=True),
+        )
+
+    get_admin_url = admin.models.LogEntry.get_admin_url
+
+    def get_admin_url_with_tenant(self):
+        url = get_admin_url(self)
+        if self.tenant_id and url:
+            return '{0}?__tenant={1}'.format(url, self.tenant_id)
+        return url
+
+    admin.models.LogEntry.get_admin_url = get_admin_url_with_tenant
