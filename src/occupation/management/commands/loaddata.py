@@ -12,23 +12,23 @@ from occupation.utils import activate_tenant
 
 class Command(loaddata.Command):
     def add_arguments(self, parser):
-        super(Command, self).add_arguments(parser)
+        super().add_arguments(parser)
         parser.add_argument(
-            '--tenant',
-            action='store',
-            dest='tenant',
-            help='Specify which tenant should be active',
+            "--tenant",
+            action="store",
+            dest="tenant",
+            help="Specify which tenant should be active",
         )
 
     def handle(self, *fixture_labels, **options):
-        tenant = options.get('tenant')
+        tenant = options.get("tenant")
         if tenant:
             activate_tenant(tenant)
 
         # We should wrap this in a try/except, and present a reasonable
         # error message if we think we tried to load data without a schema
         # that required one.
-        super(Command, self).handle(*fixture_labels, **options)
+        super().handle(*fixture_labels, **options)
 
         if tenant:
-            activate_tenant('')
+            activate_tenant("")

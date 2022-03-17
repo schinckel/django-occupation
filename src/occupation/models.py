@@ -16,9 +16,9 @@ class Tenant(AbstractBaseTenant):
     users = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         blank=True,
-        related_name='visible_tenants',
-        help_text=_('Users that may access data from this tenant.')
+        related_name="visible_tenants",
+        help_text=_("Users that may access data from this tenant."),
     )
 
     class Meta:
-        swappable = 'OCCUPATION_TENANT_MODEL'
+        swappable = "OCCUPATION_TENANT_MODEL"

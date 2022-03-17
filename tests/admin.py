@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import RelatedModel, DistinctModel, RestrictedModel
+from .models import DistinctModel, RelatedModel, RestrictedModel
 
 admin.site.register(RelatedModel)
 admin.site.register(DistinctModel)

@@ -11,21 +11,23 @@ class AddField(migrations.AddField):
     This enables us to add the field to contrib.admin.LogEntry that
     stores the schema for an aware object.
     """
+
     def __init__(self, *args, **kwargs):
-        self.app_label = kwargs.pop('app_label')
-        super(AddField, self).__init__(*args, **kwargs)
+        self.app_label = kwargs.pop("app_label")
+        super().__init__(*args, **kwargs)
 
     def state_forwards(self, app_label, state):
-        return super(AddField, self).state_forwards(self.app_label, state)
+        return super().state_forwards(self.app_label, state)
 
     def database_forwards(self, app_label, *args):
-        return super(AddField, self).database_forwards(self.app_label, *args)
+        return super().database_forwards(self.app_label, *args)
 
     def database_backwards(self, app_label, *args):
-        return super(AddField, self).database_backwards(self.app_label, *args)
+        return super().database_backwards(self.app_label, *args)
 
 
-TRIGGER_FUNCTION = """CREATE OR REPLACE FUNCTION set_tenant_field()
+TRIGGER_FUNCTION = (
+    """CREATE OR REPLACE FUNCTION set_tenant_field()
 RETURNS TRIGGER AS $$
 DECLARE
   active_tenant TEXT;
@@ -37,30 +39,41 @@ BEGIN
   RETURN NEW;
 END;
 
-$$ LANGUAGE plpgsql""", "DROP FUNCTION set_tenant_field()"
+$$ LANGUAGE plpgsql""",
+    "DROP FUNCTION set_tenant_field()",
+)
 
-TRIGGER = """
+TRIGGER = (
+    """
 CREATE TRIGGER set_tenant_field
 BEFORE INSERT ON django_admin_log
-FOR EACH ROW EXECUTE PROCEDURE set_tenant_field()""", "DROP TRIGGER set_tenant_field ON django_admin_log"
+FOR EACH ROW EXECUTE PROCEDURE set_tenant_field()""",
+    "DROP TRIGGER set_tenant_field ON django_admin_log",
+)
 
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('occupation', '0002_tenant_users'),
-    ] + ([
-        ('admin', '0001_initial'),
-    ] if 'django.contrib.admin' in settings.INSTALLED_APPS else [])
+    dependencies = [("occupation", "0002_tenant_users")] + (
+        [
+            ("admin", "0001_initial"),
+        ]
+        if "django.contrib.admin" in settings.INSTALLED_APPS
+        else []
+    )
 
-    operations = ([
-        AddField(
-            app_label='admin',
-            model_name='logentry',
-            name='tenant_id',
-            field=models.IntegerField(blank=True, null=True),
-            # field=models.ForeignKey(blank=True, null=True, to=settings.OCCUPATION_TENANT_MODEL, related_name='+', on_delete=models.SET_NULL),
-        ),
-        migrations.RunSQL(*TRIGGER_FUNCTION),
-        migrations.RunSQL(*TRIGGER)
-    ] if 'django.contrib.admin' in settings.INSTALLED_APPS else [])
+    operations = (
+        [
+            AddField(
+                app_label="admin",
+                model_name="logentry",
+                name="tenant_id",
+                field=models.IntegerField(blank=True, null=True),
+                # field=models.ForeignKey(blank=True, null=True, to=settings.OCCUPATION_TENANT_MODEL, related_name='+', on_delete=models.SET_NULL),
+            ),
+            migrations.RunSQL(*TRIGGER_FUNCTION),
+            migrations.RunSQL(*TRIGGER),
+        ]
+        if "django.contrib.admin" in settings.INSTALLED_APPS
+        else []
+    )

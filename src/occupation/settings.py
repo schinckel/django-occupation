@@ -1,4 +1,4 @@
-OCCUPATION_TENANT_MODEL = 'occupation.Tenant'
+OCCUPATION_TENANT_MODEL = "occupation.Tenant"
 """
 The model that will store the tenant objects.
 
