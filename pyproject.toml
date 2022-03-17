@@ -4,12 +4,16 @@ version = "0.1.0"
 description = "Multitenancy support in django, via Row Level Security."
 authors = ["Matthew Schinckel <matt@schinckel.net>"]
 license = "BSD"
+packages = [
+  { include = "src" },
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"
 Django = "*"
 psycopg2-binary = "*"
 pytz = "*"
+pytest-django = "*"
 
 [tool.poetry.dev-dependencies]
 hypothesis = "*"
@@ -23,6 +27,15 @@ build-backend = "poetry.core.masonry.api"
 [tool.flake8]
 ignore = "E501,E128"
 max-line-length=119
+banned-modules = """
+  six.moves.parse = use urllib.parse.urlparse
+  mock = use unittest.mock
+  six = use Python3 idioms
+  django.utils.six = use Python3 idioms
+  django.conf.urls.url = use django.urls.path or django.urls.re_path
+  django.utils.translation.ugettext = use gettext instead of ugettext
+  django.utils.translation.ungettext = use ngettext instead of ungettext
+"""
 
 [tool.isort]
 combine_as_imports= true
@@ -41,3 +54,11 @@ line-length = 119
 [tool.mypy]
 ignore_missing_imports = true
 files = "src/occupation,tests,examples"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = [
+  "tests",
+]
+DJANGO_SETTINGS_MODULE = 'tests.settings'
+pythonpath = [".", "src"]

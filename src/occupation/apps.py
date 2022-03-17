@@ -4,7 +4,7 @@ from typing import Optional, Sequence
 
 from django.apps import AppConfig
 from django.core.checks import CheckMessage, Error, Warning, register  # pylint: disable=redefined-builtin
-from django.db import DefaultConnectionProxy
+from django.db import ConnectionProxy
 
 MIDDLEWARE = [
     "occupation.middleware.SelectTenant",
@@ -159,7 +159,7 @@ def check_database_role_does_not_bypass_rls(app_configs: AppConfigs = None, **kw
         role = settings.DATABASES["default"]["USER"]
         cursor.execute("SELECT rolsuper, rolbypassrls FROM pg_roles WHERE rolname = %s", [role])
         result = cursor.fetchone()
-        if any(result):
+        if result and any(result):
             return [
                 Error(
                     "Current database user '{}' appears to be able to bypass RLS".format(role),
@@ -171,5 +171,5 @@ def check_database_role_does_not_bypass_rls(app_configs: AppConfigs = None, **kw
     return []
 
 
-def set_dummy_active_tenant(sender, connection: DefaultConnectionProxy, **kwargs) -> None:
+def set_dummy_active_tenant(sender, connection: ConnectionProxy, **kwargs) -> None:
     connection.cursor().execute("SET occupation.active_tenant = ''")

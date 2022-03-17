@@ -4,3 +4,10 @@
   {% include 'admin/change-tenant.html' %} /
   {{ block.super }}
 {% endblock %}
+
+{% block content_subtitle %}
+{% load occupation %}
+{% if cl.opts.model|is_tenant_model %}
+  <h2>This is the tenant model.</h2>
+{% endif %}
+{% endblock %}

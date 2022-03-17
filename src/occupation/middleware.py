@@ -5,7 +5,7 @@ from django.contrib.sessions.backends.base import SessionBase as Session
 from django.db import connection
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.shortcuts import redirect
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from occupation.exceptions import Forbidden
 from occupation.models import AbstractBaseTenant

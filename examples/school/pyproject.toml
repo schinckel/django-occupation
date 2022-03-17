@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "school"
+version = "0.1.0"
+description = "Test project for django-occupation"
+authors = ["Matthew Schinckel <matt@schinckel.net>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+django = ">=3.0"
+"psycopg2-binary" = "*"
+"django-occupation" = {path = "./../.."}
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
