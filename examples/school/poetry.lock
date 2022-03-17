@@ -62,7 +62,7 @@ version = "0.1.0"
 description = "Multitenancy support in django, via Row Level Security."
 category = "main"
 optional = false
-python-versions = "^3.10"
+python-versions = ">3.9"
 develop = false
 
 [package.dependencies]

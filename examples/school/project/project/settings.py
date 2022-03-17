@@ -27,7 +27,7 @@ SECRET_KEY = "9f$5a^u1ydh@0tpsk8_30y-bo_n+l*0*-x2ek9_r(&5t1u+pyv"
 DEBUG = True
 
 ALLOWED_HOSTS: List[str] = []
-
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Application definition
 
@@ -69,6 +69,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "occupation.context_processors.tenants",
             ],
+            'debug': True,
         },
     },
 ]

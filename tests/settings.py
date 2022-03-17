@@ -6,9 +6,8 @@ INSTALLED_APPS = [
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
+    "django.contrib.messages",
     "occupation",
-    # 'boardinghouse.contrib.template',
-    # 'boardinghouse.contrib.demo',
     "django.contrib.admin",
     "tests",
 ]
@@ -39,7 +38,7 @@ MIDDLEWARE = (
 PASSWORD_HASHERS = ("django.contrib.auth.hashers.MD5PasswordHasher",)
 AUTH_USER_MODEL = "auth.User"
 SECRET_KEY = "django-occupation-sekret-keye"
-
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 TEMPLATES = [
     {
@@ -56,6 +55,7 @@ TEMPLATES = [
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
+                'django.template.context_processors.request',
                 "occupation.context_processors.tenants",
             ],
         },

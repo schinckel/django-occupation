@@ -5,11 +5,11 @@ description = "Multitenancy support in django, via Row Level Security."
 authors = ["Matthew Schinckel <matt@schinckel.net>"]
 license = "BSD"
 packages = [
-  { include = "src" },
+  { include = "occupation", from = "src" },
 ]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = ">3.9"
 Django = "*"
 psycopg2-binary = "*"
 pytz = "*"
@@ -19,6 +19,8 @@ pytest-django = "*"
 hypothesis = "*"
 flake8 = "*"
 mypy = "*"
+coverage = "*"
+django_coverage_plugin = "*"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -62,3 +64,11 @@ testpaths = [
 ]
 DJANGO_SETTINGS_MODULE = 'tests.settings'
 pythonpath = [".", "src"]
+
+[tool.coverage.run]
+plugins = [
+    'django_coverage_plugin',
+]
+
+[tool.coverage.django_coverage_plugin]
+template_extensions = 'html, txt, tex, email'

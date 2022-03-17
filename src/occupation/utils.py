@@ -32,7 +32,7 @@ def get_tenant_model(apps: Apps = apps) -> TenantType:
 ENABLE_RLS = "ALTER TABLE {table_name} ENABLE ROW LEVEL SECURITY"
 FORCE_RLS = "ALTER TABLE {table_name} FORCE ROW LEVEL SECURITY"
 DISABLE_RLS = "ALTER TABLE {table_name} DISABLE ROW LEVEL SECURITY"
-CREATE_POLICY = "CREATE POLICY access_tenant_data ON {table_name} USING ({policy}) WITH CHECK ({policy})"
+CREATE_POLICY = "CREATE POLICY access_tenant_data ON {table_name} FOR ALL USING ({policy}) WITH CHECK ({policy})"
 DROP_POLICY = "DROP POLICY access_tenant_data ON {table_name}"
 
 CREATE_SUPERUSER_POLICY = """
@@ -110,4 +110,4 @@ def db_column(field: Field) -> str:
 
 
 def activate_tenant(tenant_id: str) -> None:
-    connection.cursor().execute("SET occupation.active_tenant = %s", [tenant_id])
+    connection.cursor().execute("SET occupation.active_tenant = %s", [tenant_id or ''])
