@@ -116,3 +116,61 @@ class TestAdmin(TenantTestCase):
         response = self.client.get("/admin/")
         self.assertTemplateUsed(response, "admin/change-tenant.html")
         self.assertTrue(b'select name="__tenant"' in response.content)
+
+    def test_tenant_included_in_admin_url(self):
+        a, b = self.build_tenants(2)
+        user = self.user()
+        user.visible_tenants.add(a, b)
+        self.client.force_login(user)
+
+        self.client.get("/__change_tenant__/{}/".format(a.pk))
+        response = self.client.post(
+            "/admin/tests/restrictedmodel/add/",
+            {"name": "one"},
+            follow=True,
+        )
+        self.assertEqual(200, response.status_code)
+        activate_tenant(a.pk)
+        one = RestrictedModel.objects.get()
+
+        response = self.client.get("/admin/")
+        self.assertContains(
+            response, f'<a href="/admin/tests/restrictedmodel/{one.pk}/change/?__tenant={a.pk}">0: one</a>'
+        )
+
+        response = self.client.post(
+            "/admin/tests/distinctmodel/add/",
+            {
+                "name": "two",
+                "status": "on",
+            },
+            follow=True,
+        )
+        self.assertEqual(200, response.status_code)
+        two = DistinctModel.objects.get()
+        response = self.client.get("/admin/")
+        self.assertContains(response, f'<a href="/admin/tests/distinctmodel/{two.pk}/change/">two (active)</a>')
+
+    def test_error_when_no_tenant_active(self):
+        a, b = self.build_tenants(2)
+        user = self.user()
+        user.visible_tenants.add(a, b)
+        self.client.force_login(user)
+
+        response = self.client.get(
+            "/admin/tests/restrictedmodel/add/",
+        )
+        self.assertEqual(1, len(response.context['messages']))
+        self.assertEqual(
+            'You must activate a tenant before saving this model.', str(list(response.context['messages'])[0])
+        )
+        response = self.client.post(
+            "/admin/tests/restrictedmodel/add/",
+            {
+                "name": "three",
+            },
+        )
+        self.assertEqual(
+            {'__all__': ['You must activate a tenant before saving this model.']},
+            response.context['adminform'].errors,
+        )
